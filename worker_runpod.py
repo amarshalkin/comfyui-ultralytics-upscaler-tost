@@ -2,9 +2,9 @@ import os, json, requests, runpod
 
 import torch
 import random
-import comfy
+from comfy import controlnet
 from comfy.sd import load_checkpoint_guess_config
-import nodes
+from nodes import LoadImage, VAEEncode
 from nodes import NODE_CLASS_MAPPINGS
 from comfy_extras import nodes_post_processing, nodes_differential_diffusion, nodes_upscale_model
 import numpy as np
@@ -15,12 +15,6 @@ import execution
 from server import PromptServer
 from nodes import load_custom_node
 from math import ceil, floor
-
-import sys, os
-sys.path.insert(0, os.path.abspath("/content/ComfyUI"))
-
-print(os.getcwd(), sys.path[:2])
-print(utils.__file__)
 
 def download_file(url, save_dir='/content/ComfyUI/input'):
     os.makedirs(save_dir, exist_ok=True)
@@ -70,7 +64,7 @@ ImageUpscaleWithModel = nodes_upscale_model.NODE_CLASS_MAPPINGS["ImageUpscaleWit
 
 with torch.inference_mode():
     model_patcher, clip, vae, clipvision = load_checkpoint_guess_config("/content/ComfyUI/models/checkpoints/dreamshaperXL_lightningDPMSDE.safetensors", output_vae=True, output_clip=True, embedding_directory=None)
-    tile_control_net = comfy.controlnet.load_controlnet("/content/ComfyUI/models/controlnet/xinsir-controlnet-tile-sdxl-1.0.safetensors")
+    tile_control_net = controlnet.load_controlnet("/content/ComfyUI/models/controlnet/xinsir-controlnet-tile-sdxl-1.0.safetensors")
     segm_detector = UltralyticsDetectorProvider.doit(model_name="segm/PitEyeDetailer-v2-seg.pt")
     upscale_model = UpscaleModelLoader.load_model(model_name="4xRealWebPhoto_v4_dat2.safetensors")[0]
     model_patcher = Automatic_CFG.patch(model=model_patcher, hard_mode=True, boost=True)[0]
@@ -133,7 +127,7 @@ def generate(input):
     h_tiles = values['h_tiles']
     downscale_by = values['downscale_by']
 
-    output_image, output_mask = nodes.LoadImage().load_image(input_image)
+    output_image, output_mask = LoadImage().load_image(input_image)
     output_image_s = ImageScaleToTotalPixels.upscale(image=output_image, upscale_method="nearest-exact", megapixels=1.0)[0]
     image_width = GetImageSizeAndCount.getsize(output_image_s)["result"][1]
     image_height = GetImageSizeAndCount.getsize(output_image_s)["result"][2]
@@ -153,7 +147,7 @@ def generate(input):
     output_image_t = TTPlanet_TileSimple.execute(output_image, scale_factor=scale_factor, blur_strength=blur_strength)[0]
     positive, negative = ControlNetApplyAdvanced.apply_controlnet(positive=cond, negative=n_cond, control_net=tile_control_net, image=output_image_t, strength=strength, start_percent=start_percent, end_percent=end_percent)
     tile_model = TiledDiffusion.apply(model=model_patcher, method=tile_method, tile_width=tile_width, tile_height=tile_height, tile_overlap=tile_overlap, tile_batch_size=tile_batch_size)[0]
-    latent_image = nodes.VAEEncode().encode(vae, output_image)[0]
+    latent_image = VAEEncode().encode(vae, output_image)[0]
     inspire_sample = KSampler_inspire.doit(model=tile_model, 
                                             seed=inspire_seed, 
                                             steps=inspire_steps, 
