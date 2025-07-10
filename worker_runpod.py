@@ -16,18 +16,13 @@ from server import PromptServer
 from nodes import load_custom_node
 from math import ceil, floor
 
-
-
-# 1. Указываем Python’у, где искать пакеты ComfyUI
-COMFY_ROOT = os.path.abspath("/content/ComfyUI")
+COMFY_ROOT = "/content/ComfyUI"
 sys.path.insert(0, COMFY_ROOT)
 
-# 2. Гарантируем, что utils/ — настоящий пакет
-#    (если вы не сделали этого в Dockerfile)
+# ensure utils/ is a package
 utils_init = os.path.join(COMFY_ROOT, "utils", "__init__.py")
-if not os.path.exists(utils_init):
-    os.makedirs(os.path.dirname(utils_init), exist_ok=True)
-    open(utils_init, "w").close()
+os.makedirs(os.path.dirname(utils_init), exist_ok=True)
+open(utils_init, "a").close()
 
 def download_file(url, save_dir='/content/ComfyUI/input'):
     os.makedirs(save_dir, exist_ok=True)
