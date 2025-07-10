@@ -19,6 +19,9 @@ from math import ceil, floor
 import sys, os
 sys.path.insert(0, os.path.abspath("/content/ComfyUI"))
 
+print(os.getcwd(), sys.path[:2]))
+print(utils.__file__)
+
 def download_file(url, save_dir='/content/ComfyUI/input'):
     os.makedirs(save_dir, exist_ok=True)
     file_name = url.split('/')[-1]
