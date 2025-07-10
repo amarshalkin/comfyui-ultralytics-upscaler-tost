@@ -38,6 +38,4 @@ RUN pip install opencv-python imageio imageio-ffmpeg ffmpeg-python av runpod \
 
 COPY ./worker_runpod.py /content/ComfyUI/worker_runpod.py
 WORKDIR /content/ComfyUI
-# Гарантируем, что Python будет искать пакеты в корне ComfyUI
-ENV PYTHONPATH=/content:${PYTHONPATH}
 CMD ["python", "worker_runpod.py"]
