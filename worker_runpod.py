@@ -11,9 +11,23 @@ import numpy as np
 from PIL import Image
 import asyncio
 import execution
-import server
+# 3. Явно импортируем нужные классы из server.py
+from server import PromptServer
 from nodes import load_custom_node
 from math import ceil, floor
+
+
+
+# 1. Указываем Python’у, где искать пакеты ComfyUI
+COMFY_ROOT = os.path.abspath("/content/ComfyUI")
+sys.path.insert(0, COMFY_ROOT)
+
+# 2. Гарантируем, что utils/ — настоящий пакет
+#    (если вы не сделали этого в Dockerfile)
+utils_init = os.path.join(COMFY_ROOT, "utils", "__init__.py")
+if not os.path.exists(utils_init):
+    os.makedirs(os.path.dirname(utils_init), exist_ok=True)
+    open(utils_init, "w").close()
 
 def download_file(url, save_dir='/content/ComfyUI/input'):
     os.makedirs(save_dir, exist_ok=True)
@@ -27,7 +41,7 @@ def download_file(url, save_dir='/content/ComfyUI/input'):
 
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
-server_instance = server.PromptServer(loop)
+server_instance = PromptServer(loop)
 execution.PromptQueue(server_instance)
 
 load_custom_node("/content/ComfyUI/custom_nodes/ComfyUI-AutomaticCFG")
