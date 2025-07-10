@@ -2,7 +2,7 @@ import os, json, requests, runpod
 
 import torch
 import random
-import comfy
+from comfy import controlnet
 from comfy.sd import load_checkpoint_guess_config
 import nodes
 from nodes import NODE_CLASS_MAPPINGS
@@ -11,7 +11,7 @@ import numpy as np
 from PIL import Image
 import asyncio
 import execution
-import server
+from server import PromptServer
 from nodes import load_custom_node
 from math import ceil, floor
 
@@ -27,7 +27,7 @@ def download_file(url, save_dir='/content/ComfyUI/input'):
 
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
-server_instance = server.PromptServer(loop)
+server_instance = PromptServer(loop)
 execution.PromptQueue(server_instance)
 
 load_custom_node("/content/ComfyUI/custom_nodes/ComfyUI-AutomaticCFG")
@@ -63,7 +63,7 @@ ImageUpscaleWithModel = nodes_upscale_model.NODE_CLASS_MAPPINGS["ImageUpscaleWit
 
 with torch.inference_mode():
     model_patcher, clip, vae, clipvision = load_checkpoint_guess_config("/content/ComfyUI/models/checkpoints/dreamshaperXL_lightningDPMSDE.safetensors", output_vae=True, output_clip=True, embedding_directory=None)
-    tile_control_net = comfy.controlnet.load_controlnet("/content/ComfyUI/models/controlnet/xinsir-controlnet-tile-sdxl-1.0.safetensors")
+    tile_control_net = controlnet.load_controlnet("/content/ComfyUI/models/controlnet/xinsir-controlnet-tile-sdxl-1.0.safetensors")
     segm_detector = UltralyticsDetectorProvider.doit(model_name="segm/PitEyeDetailer-v2-seg.pt")
     upscale_model = UpscaleModelLoader.load_model(model_name="4xRealWebPhoto_v4_dat2.safetensors")[0]
     model_patcher = Automatic_CFG.patch(model=model_patcher, hard_mode=True, boost=True)[0]
