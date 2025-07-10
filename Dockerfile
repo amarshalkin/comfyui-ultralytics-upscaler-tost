@@ -38,5 +38,6 @@ RUN pip install opencv-python imageio imageio-ffmpeg ffmpeg-python av runpod \
 
 COPY ./worker_runpod.py /content/ComfyUI/worker_runpod.py
 WORKDIR /content/ComfyUI
-RUN pip install -e .
+RUN pip install comfy-cli
+RUN comfy install
 CMD python worker_runpod.py
