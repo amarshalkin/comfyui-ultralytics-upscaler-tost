@@ -16,13 +16,8 @@ from server import PromptServer
 from nodes import load_custom_node
 from math import ceil, floor
 
-COMFY_ROOT = "/content/ComfyUI"
-sys.path.insert(0, COMFY_ROOT)
-
-# ensure utils/ is a package
-utils_init = os.path.join(COMFY_ROOT, "utils", "__init__.py")
-os.makedirs(os.path.dirname(utils_init), exist_ok=True)
-open(utils_init, "a").close()
+import sys, os
+sys.path.insert(0, os.path.abspath("/content/ComfyUI"))
 
 def download_file(url, save_dir='/content/ComfyUI/input'):
     os.makedirs(save_dir, exist_ok=True)
