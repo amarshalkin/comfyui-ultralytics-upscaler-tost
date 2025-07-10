@@ -40,8 +40,4 @@ COPY ./worker_runpod.py /content/ComfyUI/worker_runpod.py
 WORKDIR /content/ComfyUI
 # Гарантируем, что Python будет искать пакеты в корне ComfyUI
 ENV PYTHONPATH=/content:${PYTHONPATH}
-
-RUN sed -i \
-  's|^from utils.install_util import get_missing_requirements_message, requirements_path$|from ComfyUI.utils.install_util import get_missing_requirements_message, requirements_path|' \
-  /content/ComfyUI/app/frontend_management.py
 CMD ["python", "worker_runpod.py"]
