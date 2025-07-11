@@ -1,3 +1,5 @@
+import sys, os, importlib
+
 # 1. Убираем ровно ту запись, где basename == 'comfy'
 sys.path = [p for p in sys.path
             if os.path.basename(os.path.normpath(p)) != 'comfy']
@@ -16,7 +18,7 @@ spec = importlib.util.find_spec('utils')
 print(" utils origin:", spec.origin)
 print(" submodule search locations:", spec.submodule_search_locations)
 
-import os, json, requests, runpod
+import json, requests, runpod
 
 import torch
 import random
