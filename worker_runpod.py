@@ -11,10 +11,17 @@ import numpy as np
 from PIL import Image
 import asyncio
 import execution
-# 3. Явно импортируем нужные классы из server.py
+# 1. Явно импортируем нужные классы из server.py
 from server import PromptServer
 from nodes import load_custom_node
 from math import ceil, floor
+
+# 2. Убираем ровно ту запись, где basename == 'comfy'
+sys.path = [p for p in sys.path
+            if os.path.basename(os.path.normpath(p)) != 'comfy']
+
+# 3. Добавляем корень проекта на первое место
+sys.path.insert(0, '/content/ComfyUI')
 
 def download_file(url, save_dir='/content/ComfyUI/input'):
     os.makedirs(save_dir, exist_ok=True)
