@@ -1,3 +1,21 @@
+# 1. Убираем ровно ту запись, где basename == 'comfy'
+sys.path = [p for p in sys.path
+            if os.path.basename(os.path.normpath(p)) != 'comfy']
+
+# 2. Добавляем корень проекта на первое место
+sys.path.insert(0, '/content/ComfyUI')
+
+# 3. Сбрасываем кэши импорта и выгружаем уже загруженный модуль, если он есть
+importlib.invalidate_caches()
+if 'utils' in sys.modules:
+    del sys.modules['utils']
+
+# 4. Проверяем результат
+print("\nПосле фильтрации:")
+spec = importlib.util.find_spec('utils')
+print(" utils origin:", spec.origin)
+print(" submodule search locations:", spec.submodule_search_locations)
+
 import os, json, requests, runpod
 
 import torch
@@ -11,28 +29,10 @@ import numpy as np
 from PIL import Image
 import asyncio
 import execution
-# 1. Явно импортируем нужные классы из server.py
+# 5. Явно импортируем нужные классы из server.py
 from server import PromptServer
 from nodes import load_custom_node
 from math import ceil, floor
-
-# 2. Убираем ровно ту запись, где basename == 'comfy'
-sys.path = [p for p in sys.path
-            if os.path.basename(os.path.normpath(p)) != 'comfy']
-
-# 3. Добавляем корень проекта на первое место
-sys.path.insert(0, '/content/ComfyUI')
-
-# 4) Сбрасываем кэши импорта и выгружаем уже загруженный модуль, если он есть
-importlib.invalidate_caches()
-if 'utils' in sys.modules:
-    del sys.modules['utils']
-
-# 5) Проверяем результат
-print("\nПосле фильтрации:")
-spec = importlib.util.find_spec('utils')
-print(" utils origin:", spec.origin)
-print(" submodule search locations:", spec.submodule_search_locations)
 
 def download_file(url, save_dir='/content/ComfyUI/input'):
     os.makedirs(save_dir, exist_ok=True)
