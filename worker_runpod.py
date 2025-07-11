@@ -28,6 +28,12 @@ importlib.invalidate_caches()
 if 'utils' in sys.modules:
     del sys.modules['utils']
 
+# 5) Проверяем результат
+print("\nПосле фильтрации:")
+spec = importlib.util.find_spec('utils')
+print(" utils origin:", spec.origin)
+print(" submodule search locations:", spec.submodule_search_locations)
+
 def download_file(url, save_dir='/content/ComfyUI/input'):
     os.makedirs(save_dir, exist_ok=True)
     file_name = url.split('/')[-1]
