@@ -23,6 +23,11 @@ sys.path = [p for p in sys.path
 # 3. Добавляем корень проекта на первое место
 sys.path.insert(0, '/content/ComfyUI')
 
+# 4) Сбрасываем кэши импорта и выгружаем уже загруженный модуль, если он есть
+importlib.invalidate_caches()
+if 'utils' in sys.modules:
+    del sys.modules['utils']
+
 def download_file(url, save_dir='/content/ComfyUI/input'):
     os.makedirs(save_dir, exist_ok=True)
     file_name = url.split('/')[-1]
