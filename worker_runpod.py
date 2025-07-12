@@ -1,22 +1,17 @@
-import sys, os, importlib
+import os
+import sys
+import types
+import importlib.util
 
-# 1. Убираем ровно ту запись, где basename == 'comfy'
-sys.path = [p for p in sys.path
-            if os.path.basename(os.path.normpath(p)) != 'comfy']
-
-# 2. Добавляем корень проекта на первое место
-sys.path.insert(0, '/content/ComfyUI')
-
-# 3. Сбрасываем кэши импорта и выгружаем уже загруженный модуль, если он есть
-importlib.invalidate_caches()
-if 'utils' in sys.modules:
-    del sys.modules['utils']
-
-# 4. Проверяем результат
-print("\nПосле фильтрации:")
-spec = importlib.util.find_spec('utils')
-print(" utils origin:", spec.origin)
-print(" submodule search locations:", spec.submodule_search_locations)
+ROOT = os.path.dirname(os.path.abspath(__file__))
+pkg = types.ModuleType('utils')
+pkg.__path__ = [os.path.join(ROOT, 'utils')]
+sys.modules['utils'] = pkg
+util_path = os.path.join(ROOT, 'utils', 'install_util.py')
+spec = importlib.util.spec_from_file_location('utils.install_util', util_path)
+mod = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(mod)
+sys.modules['utils.install_util'] = mod
 
 import json, requests, runpod
 
