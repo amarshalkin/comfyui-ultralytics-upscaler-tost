@@ -234,14 +234,21 @@ def generate(input):
 
     result = "/content/ultralytics.png"
     
-    with open(result, "rb") as f:
-        b64 = base64.b64encode(f.read()).decode("utf-8")
-        
     try:
-        os.remove(result)
-    except:
-        pass
-        
-    return base64.b64encode(image_bytes).decode('utf-8')
+        with open(result, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode("utf-8")
+        return {
+            "status": "COMPLETED",
+            "image_base64": b64,
+            "filename": os.path.basename(png_path)
+        }
+    except Exception as e:
+        print(e)
+    finally:
+        if os.path.exists(result):
+            try:
+                os.remove(result)
+            except OSError:
+                pass
 
 runpod.serverless.start({"handler": generate})
