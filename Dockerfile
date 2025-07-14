@@ -38,5 +38,17 @@ RUN pip install opencv-python imageio imageio-ffmpeg ffmpeg-python av runpod \
 
 COPY ./worker_runpod.py /content/ComfyUI/worker_runpod.py
 WORKDIR /content/ComfyUI
+
 RUN python -m pip install -r requirements.txt
+RUN pip install dill ultralytics
+RUN pip install -r /custom_nodes/ComfyUI-Manager/requirements.txt
+RUN pip install -r custom_nodes/ComfyUI-Impact-Subpack/requirements.txt
+RUN pip install -r custom_nodes/ComfyUI-AutomaticCFG/requirements.txt
+RUN pip install -r custom_nodes/Derfuu_ComfyUI_ModdedNodes/requirements.txt
+RUN pip install -r custom_nodes/ComfyUI-Impact-Pack
+RUN pip install -r custom_nodes/ComfyUI-Inspire-Pack
+RUN pip install -r custom_nodes/ComfyUI-KJNodes
+RUN pip install -r custom_nodes/comfyui_controlnet_aux
+RUN pip install -r custom_nodes/was-node-suite-comfyui
+
 CMD ["python", "worker_runpod.py"]
