@@ -2,6 +2,7 @@ import os
 import sys
 import types
 import importlib.util
+import base64
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 pkg = types.ModuleType('utils')
@@ -232,22 +233,15 @@ def generate(input):
     Image.fromarray(np.array(blending_image*255, dtype=np.uint8)[0]).save("/content/ultralytics.png")
 
     result = "/content/ultralytics.png"
-    import base64
     
-    png_path = "/content/ultralytics.png"
-    with open(png_path, "rb") as f:
+    with open(result, "rb") as f:
         b64 = base64.b64encode(f.read()).decode("utf-8")
-
-    # Удаляем файл, он больше не нужен
+        
     try:
-        os.remove(png_path)
+        os.remove(result)
     except:
         pass
         
-    return {
-        "status": "DONE",
-        "image_base64": b64,
-        "filename": os.path.basename(png_path)
-    }
+    return base64.b64encode(image_bytes).decode('utf-8')
 
 runpod.serverless.start({"handler": generate})
