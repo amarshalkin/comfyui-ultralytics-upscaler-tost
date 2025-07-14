@@ -44,10 +44,10 @@ RUN pip install dill ultralytics
 RUN pip install -r custom_nodes/ComfyUI-Manager/requirements.txt
 RUN pip install -r custom_nodes/ComfyUI-Impact-Subpack/requirements.txt
 RUN pip install -r custom_nodes/ComfyUI-AutomaticCFG/requirements.txt
-RUN pip install -r custom_nodes/ComfyUI-Impact-Pack
-RUN pip install -r custom_nodes/ComfyUI-Inspire-Pack
-RUN pip install -r custom_nodes/ComfyUI-KJNodes
-RUN pip install -r custom_nodes/comfyui_controlnet_aux
-RUN pip install -r custom_nodes/was-node-suite-comfyui
+RUN pip install -r custom_nodes/ComfyUI-Impact-Pack/requirements.txt
+RUN pip install -r custom_nodes/ComfyUI-Inspire-Pack/requirements.txt
+RUN pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt
+RUN pip install -r custom_nodes/comfyui_controlnet_aux/requirements.txt
+RUN pip install -r custom_nodes/was-node-suite-comfyui/requirements.txt
 
 CMD ["python", "worker_runpod.py"]
