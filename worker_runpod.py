@@ -232,6 +232,10 @@ def generate(input):
     blending_image = WAS_Image_Blending_Mode.image_blending_mode(image_a=blend_image, image_b=output_image, mode=blending_mode, blend_percentage=blending_blend_percentage)[0]
     Image.fromarray(np.array(blending_image*255, dtype=np.uint8)[0]).save("/content/ultralytics.png")
 
+    print("="*20)
+    print("SEND IMAGE")
+    print("="*20)
+    
     result = "/content/ultralytics.png"
     
     try:
