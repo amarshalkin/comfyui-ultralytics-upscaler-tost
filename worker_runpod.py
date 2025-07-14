@@ -31,6 +31,13 @@ from server import PromptServer
 from nodes import load_custom_node
 from math import ceil, floor
 
+retry_strategy = Retry(
+    total=5,
+    backoff_factor=1,
+    status_forcelist=[429, 500, 502, 503, 504],
+    allowed_methods=["HEAD", "GET"]
+)
+
 def download_file(url, save_dir='/content/ComfyUI/input'):
     os.makedirs(save_dir, exist_ok=True)
     file_name = url.split('/')[-1]
