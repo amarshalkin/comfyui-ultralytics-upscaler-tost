@@ -35,10 +35,23 @@ def download_file(url, save_dir='/content/ComfyUI/input'):
     os.makedirs(save_dir, exist_ok=True)
     file_name = url.split('/')[-1]
     file_path = os.path.join(save_dir, file_name)
-    response = requests.get(url)
-    response.raise_for_status()
-    with open(file_path, 'wb') as file:
-        file.write(response.content)
+
+    # Настраиваем сессию с retry
+    session = requests.Session()
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+
+    try:
+        # Устанавливаем таймаут (например, 30 секунд)
+        response = session.get(url, timeout=30)
+        response.raise_for_status()
+        with open(file_path, "wb") as f:
+            f.write(response.content)
+    except requests.exceptions.RequestException as e:
+        # Логируем и пробрасываем дальше
+        print(f"Ошибка при загрузке {url}: {e}")
+        raise
     return file_path
 
 loop = asyncio.new_event_loop()
