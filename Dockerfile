@@ -44,7 +44,6 @@ RUN pip install dill ultralytics
 RUN pip install -r custom_nodes/ComfyUI-Manager/requirements.txt
 RUN pip install -r custom_nodes/ComfyUI-Impact-Subpack/requirements.txt
 RUN pip install -r custom_nodes/ComfyUI-AutomaticCFG/requirements.txt
-RUN pip install -r custom_nodes/Derfuu_ComfyUI_ModdedNodes/requirements.txt
 RUN pip install -r custom_nodes/ComfyUI-Impact-Pack
 RUN pip install -r custom_nodes/ComfyUI-Inspire-Pack
 RUN pip install -r custom_nodes/ComfyUI-KJNodes
