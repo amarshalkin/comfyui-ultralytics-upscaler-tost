@@ -37,10 +37,14 @@ RUN pip install opencv-python imageio imageio-ffmpeg ffmpeg-python av runpod \
 	aria2c --console-log-level=error -c -x 16 -s 16 -k 1M https://huggingface.co/camenduru/ultralytics/resolve/main/xinsir-controlnet-tile-sdxl-1.0.safetensors -d /content/ComfyUI/models/controlnet -o xinsir-controlnet-tile-sdxl-1.0.safetensors
 
 COPY ./worker_runpod.py /content/ComfyUI/worker_runpod.py
+
+RUN mkdir -p /content/ComfyUI/user/default/ComfyUI-Impact-Subpack \
+ && echo "PitEyeDetailer-v2-seg.pt" >> /content/ComfyUI/user/default/ComfyUI-Impact-Subpack/model-whitelist.txt
+ 
 WORKDIR /content/ComfyUI
 
-RUN python -m pip install -r requirements.txt
 RUN pip install dill ultralytics
+
 RUN pip install -r custom_nodes/ComfyUI-Manager/requirements.txt
 RUN pip install -r custom_nodes/ComfyUI-Impact-Subpack/requirements.txt
 RUN pip install -r custom_nodes/ComfyUI-AutomaticCFG/requirements.txt
@@ -49,5 +53,8 @@ RUN pip install -r custom_nodes/ComfyUI-Inspire-Pack/requirements.txt
 RUN pip install -r custom_nodes/ComfyUI-KJNodes/requirements.txt
 RUN pip install -r custom_nodes/comfyui_controlnet_aux/requirements.txt
 RUN pip install -r custom_nodes/was-node-suite-comfyui/requirements.txt
+
+RUN python -m pip install -r requirements.txt
+RUN pip install --upgrade ComfyUI-to-Python-Extension
 
 CMD ["python", "worker_runpod.py"]
