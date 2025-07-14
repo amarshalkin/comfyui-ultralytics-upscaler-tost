@@ -41,7 +41,7 @@ WORKDIR /content/ComfyUI
 
 RUN python -m pip install -r requirements.txt
 RUN pip install dill ultralytics
-RUN pip install -r /custom_nodes/ComfyUI-Manager/requirements.txt
+RUN pip install -r custom_nodes/ComfyUI-Manager/requirements.txt
 RUN pip install -r custom_nodes/ComfyUI-Impact-Subpack/requirements.txt
 RUN pip install -r custom_nodes/ComfyUI-AutomaticCFG/requirements.txt
 RUN pip install -r custom_nodes/Derfuu_ComfyUI_ModdedNodes/requirements.txt
