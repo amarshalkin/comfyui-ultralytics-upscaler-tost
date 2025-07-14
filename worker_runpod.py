@@ -31,6 +31,9 @@ from server import PromptServer
 from nodes import load_custom_node
 from math import ceil, floor
 
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
 retry_strategy = Retry(
     total=5,
     backoff_factor=1,
