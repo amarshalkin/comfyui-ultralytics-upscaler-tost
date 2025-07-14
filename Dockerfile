@@ -55,6 +55,5 @@ RUN pip install -r custom_nodes/comfyui_controlnet_aux/requirements.txt
 RUN pip install -r custom_nodes/was-node-suite-comfyui/requirements.txt
 
 RUN python -m pip install -r requirements.txt
-RUN pip install --upgrade ComfyUI-to-Python-Extension
 
 CMD ["python", "worker_runpod.py"]
