@@ -242,17 +242,20 @@ def generate(input):
     try:
         default_filename = os.path.basename(result)
         with open(result, "rb") as file:
-            files = {default_filename: file.read()}
+            files = {
+                "file": (default_filename, file, "image/png")
+            }
             response = requests.post(
-                f"https://fast-knotta.ru.tuna.am",
+                "https://fast-knotta.ru.tuna.am/callback",
                 files=files
             )
+            
             response.raise_for_status()
             return {"status": "DONE"}
     except Exception as err:
         err_str = traceback.format_exc()
         print("Произошла ошибка:\n", err_str)
-        return {"result": f"FAILED: {str(e)}", "status": "FAILED"}
+        return {"result": f"FAILED: {str(err)}", "status": "FAILED"}
     finally:
         if os.path.exists(result):
             try:
