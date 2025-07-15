@@ -244,7 +244,7 @@ def generate(input):
         return {
             "status": "COMPLETED",
             "image_base64": b64,
-            "filename": os.path.basename(png_path)
+            "filename": os.path.basename(result)
         }
     except Exception as e:
         print(e)
