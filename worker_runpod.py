@@ -4,6 +4,7 @@ import types
 import importlib.util
 import base64
 import traceback
+import io
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 pkg = types.ModuleType('utils')
