@@ -242,7 +242,8 @@ def generate(input):
     
     try:
         pil_img = Image.fromarray(np.array(blending_image*255, dtype=np.uint8)[0])
-
+        filename = os.path.basename(result)
+        
         # Записываем изображение в буфер в формате PNG
         buffer = io.BytesIO()
         pil_img.save(buffer, format="PNG")
@@ -250,8 +251,14 @@ def generate(input):
         
         # Кодируем в Base64 и декодируем в строку
         base64_str = base64.b64encode(image_bytes).decode("utf-8")
+        payload = {
+            "filename": filename,
+            "image_base64": base64_str
+        }
 
-        return base64_str
+        requests.post('https://fast-knotta.ru.tuna.am/callback', json=payload)
+        
+        return {"status": "COMPLETED"}
 
         #default_filename = os.path.basename(result)
         #with open(result, "rb") as file:
