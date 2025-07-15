@@ -231,7 +231,7 @@ def generate(input):
     color_image = ColorMatch.colormatch(image_ref=output_image, image_target=detailer_image, method=color_method)[0]
     blend_image = ImageBlend.blend_images(image1=color_image, image2=detailer_image, blend_factor=blend_factor, blend_mode=blend_mode)[0]
     blending_image = WAS_Image_Blending_Mode.image_blending_mode(image_a=blend_image, image_b=output_image, mode=blending_mode, blend_percentage=blending_blend_percentage)[0]
-    Image.fromarray(np.array(blending_image*255, dtype=np.uint8)[0]).save("/content/ultralytics.png")
+    # Image.fromarray(np.array(blending_image*255, dtype=np.uint8)[0]).save("/content/ultralytics.png")
 
     print("="*20)
     print("SEND IMAGE")
@@ -240,33 +240,45 @@ def generate(input):
     result = "/content/ultralytics.png"
     
     try:
-        default_filename = os.path.basename(result)
-        with open(result, "rb") as file:
-            data = {
-                "result_url": result,
-                "original_url": input_image
-            }
-            
-            files = {
-                "file": (default_filename, file, "image/png")
-            }
-            response = requests.post(
-                "https://fast-knotta.ru.tuna.am/callback",
-                data=data,
-                files=files
-            )
-            
-            response.raise_for_status()
-            return {"status": "DONE"}
+        pil_img = Image.fromarray(np.array(blending_image*255, dtype=np.uint8)[0])
+
+        # Записываем изображение в буфер в формате PNG
+        buffer = io.BytesIO()
+        pil_img.save(buffer, format="PNG")
+        image_bytes = buffer.getvalue()
+        
+        # Кодируем в Base64 и декодируем в строку
+        base64_str = base64.b64encode(image_bytes).decode("utf-8")
+
+        return base64_str
+
+        #default_filename = os.path.basename(result)
+        #with open(result, "rb") as file:
+        #    data = {
+        #        "result_url": result,
+        #        "original_url": input_image
+        #    }
+        #    
+        #    files = {
+        #        "file": (default_filename, file, "image/png")
+        #    }
+        #    response = requests.post(
+        #        "https://fast-knotta.ru.tuna.am/callback",
+        #        data=data,
+        #        files=files
+        #    )
+        #    
+        #    response.raise_for_status()
+        #    return {"status": "DONE"}
     except Exception as err:
         err_str = traceback.format_exc()
         print("Произошла ошибка:\n", err_str)
         return {"result": f"FAILED: {str(err)}", "status": "FAILED"}
-    finally:
-        if os.path.exists(result):
-            try:
-                os.remove(result)
-            except OSError:
-                pass
+    #finally:
+    #    if os.path.exists(result):
+    #        try:
+    #            os.remove(result)
+    #        except OSError:
+    #            pass
 
 runpod.serverless.start({"handler": generate})
