@@ -237,14 +237,19 @@ def generate(input):
     print("="*20)
     
     result = "/content/ultralytics.png"
+
+    print(values)
     
     try:
         with open(result, "rb") as f:
             b64 = base64.b64encode(f.read()).decode("utf-8")
         return {
-            "status": "COMPLETED",
-            "image_base64": b64,
-            "filename": os.path.basename(result)
+            "jobId": values["id"],
+            "status": "DONE",
+            "result": {
+                "image_base64": b64,
+                "filename": os.path.basename(result)
+            }
         }
     except Exception as e:
         print(e)
