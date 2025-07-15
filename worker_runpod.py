@@ -256,7 +256,8 @@ def generate(input):
             "image_base64": base64_str
         }
 
-        requests.post('https://fast-knotta.ru.tuna.am/callback', json=payload)
+        response = requests.post('https://fast-knotta.ru.tuna.am/callback', json=payload)
+        response.raise_for_status()
         
         return {"status": "COMPLETED"}
 
