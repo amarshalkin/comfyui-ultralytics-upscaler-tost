@@ -242,11 +242,17 @@ def generate(input):
     try:
         default_filename = os.path.basename(result)
         with open(result, "rb") as file:
+            data = {
+                "result_url": result,
+                "original_url": input_image
+            }
+            
             files = {
                 "file": (default_filename, file, "image/png")
             }
             response = requests.post(
                 "https://fast-knotta.ru.tuna.am/callback",
+                data=data,
                 files=files
             )
             
