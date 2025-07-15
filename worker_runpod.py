@@ -3,6 +3,7 @@ import sys
 import types
 import importlib.util
 import base64
+import traceback
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 pkg = types.ModuleType('utils')
@@ -237,22 +238,17 @@ def generate(input):
     print("="*20)
     
     result = "/content/ultralytics.png"
-
-    print(values)
     
     try:
         with open(result, "rb") as f:
             b64 = base64.b64encode(f.read()).decode("utf-8")
         return {
-            "jobId": values["id"],
-            "status": "DONE",
-            "result": {
-                "image_base64": b64,
-                "filename": os.path.basename(result)
-            }
+            "image_base64": b64,
+            "filename": os.path.basename(result)
         }
-    except Exception as e:
-        print(e)
+    except Exception as err:
+        err_str = traceback.format_exc()
+        print("Произошла ошибка:\n", err_str)
     finally:
         if os.path.exists(result):
             try:
